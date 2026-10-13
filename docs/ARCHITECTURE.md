@@ -19,7 +19,7 @@ Three ways to get Gutenberg into a desktop app were considered:
 | Load the site's editor scripts into a local shell page | Partial | Needs a server-side asset manifest; meta boxes and many `admin_enqueue_scripts` integrations still break. |
 | **Load the site's own block editor screen in an isolated, hardened webview inside a native shell** | **Complete** | The site runs its real editor, so every block, sidebar plugin and meta box works exactly as in wp-admin. |
 
-We use the third approach. It is the only one that can honour "fully compatible with any kind of block plugin". Everything *around* the editor canvas is native: windows, menus, keyboard shortcuts, site and content browser, toolbar, dialogs, notifications, credential storage. The wp-admin chrome (admin bar, admin menu, the "W" back button) is hidden so the editor reads as part of the app, not as a website.
+We use the third approach. It is the only one that can honour "fully compatible with any kind of block plugin". Everything *around* the editor canvas is native: windows, menus, keyboard shortcuts, site and content browser, toolbar, dialogs, notifications, credential storage. The wp-admin chrome (admin bar, admin menu, the "W" back button) is hidden so the editor reads as part of the app, not as a website. While a post is open the sidebar collapses (focus mode) and the editor fills the window below the app's own toolbar, which carries Save, Publish/Submit for Review, Undo/Redo, preview sizes and the settings toggle.
 
 ## Framework: Tauri 2 (Rust core + system webview)
 
