@@ -22,7 +22,8 @@
         "minWidth": 900,
         "minHeight": 600,
         "center": true,
-        "dragDropEnabled": false
+        "dragDropEnabled": false,
+        "create": false
       }
     ],
     "security": {
@@ -86,8 +87,6 @@
       "deb": {
         "section": "editors",
         "depends": [
-          "libwebkit2gtk-4.1-0",
-          "libgtk-3-0",
           "libsecret-1-0"
         ]
       }

@@ -23,7 +23,8 @@
             "sidebar"
           ],
           "state": "followsWindowActiveState"
-        }
+        },
+        "create": false
       }
     ]
   }

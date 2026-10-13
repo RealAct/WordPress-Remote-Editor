@@ -42,10 +42,27 @@ fn constant_time_eq(a: &str, b: &str) -> bool {
     a.len() == b.len() && a.iter().zip(b).fold(0u8, |acc, (x, y)| acc | (x ^ y)) == 0
 }
 
-pub fn authorize_url(endpoint: &Url, state: &str) -> Url {
+/// WordPress rejects a second Application Password with the same name, so
+/// name each one after this device and the time it was created. That also
+/// tells the user which computer a password belongs to on their profile page.
+pub fn password_name(device: &str, now: chrono::DateTime<chrono::Local>) -> String {
+    let device: String = device
+        .chars()
+        .filter(|c| !c.is_control())
+        .take(40)
+        .collect();
+    let stamp = now.format("%Y-%m-%d %H:%M");
+    if device.trim().is_empty() {
+        format!("{APP_NAME} ({stamp})")
+    } else {
+        format!("{APP_NAME} ({}, {stamp})", device.trim())
+    }
+}
+
+pub fn authorize_url(endpoint: &Url, state: &str, name: &str) -> Url {
     let mut url = endpoint.clone();
     url.query_pairs_mut()
-        .append_pair("app_name", APP_NAME)
+        .append_pair("app_name", name)
         .append_pair("app_id", APP_ID)
         .append_pair(
             "success_url",
@@ -70,7 +87,8 @@ pub fn begin(
         .clone()
         .ok_or(AppError::ApplicationPasswordsUnavailable)?;
     let state = random_state();
-    let url = authorize_url(&endpoint, &state);
+    let name = password_name(&tauri_plugin_os::hostname(), chrono::Local::now());
+    let url = authorize_url(&endpoint, &state, &name);
     *app.state::<AppState>()
         .pending_auth
         .lock()
@@ -80,12 +98,18 @@ pub fn begin(
         allow_insecure_local,
     });
 
+    // Reuse an open sign-in window (closing is asynchronous, so its label
+    // can't be reused immediately). Its navigation guard is site-independent.
     if let Some(existing) = app.get_webview_window(AUTH_WINDOW) {
-        existing.close().ok();
+        existing.set_title(&format!("Sign in to {}", discovery.name))?;
+        existing.navigate(url)?;
+        existing.unminimize().ok();
+        existing.set_focus().ok();
+        return Ok(());
     }
 
     let handle = app.clone();
-    WebviewWindowBuilder::new(app, AUTH_WINDOW, WebviewUrl::External(url))
+    let window = WebviewWindowBuilder::new(app, AUTH_WINDOW, WebviewUrl::External(url))
         .title(format!("Sign in to {}", discovery.name))
         .inner_size(520.0, 720.0)
         .resizable(true)
@@ -108,6 +132,12 @@ pub fn begin(
                 || nav.scheme() == "about"
         })
         .build()?;
+    // The app menu is attached to every window on Windows and Linux; the
+    // sign-in window shouldn't offer editor commands.
+    #[cfg(not(target_os = "macos"))]
+    window.remove_menu().ok();
+    #[cfg(target_os = "macos")]
+    let _ = window;
     Ok(())
 }
 
@@ -224,9 +254,16 @@ mod tests {
     #[test]
     fn builds_authorize_url_with_state() {
         let ep = Url::parse("https://example.com/wp-admin/authorize-application.php").unwrap();
-        let u = authorize_url(&ep, "abc");
+        let u = authorize_url(
+            &ep,
+            "abc",
+            "WordPress Remote Editor (laptop, 2026-10-13 09:00)",
+        );
         let pairs: std::collections::HashMap<_, _> = u.query_pairs().into_owned().collect();
-        assert_eq!(pairs["app_name"], APP_NAME);
+        assert_eq!(
+            pairs["app_name"],
+            "WordPress Remote Editor (laptop, 2026-10-13 09:00)"
+        );
         assert_eq!(pairs["app_id"], APP_ID);
         assert_eq!(
             pairs["success_url"],
@@ -236,6 +273,23 @@ mod tests {
             pairs["reject_url"],
             "wpremoteeditor://auth/rejected?state=abc"
         );
+    }
+
+    #[test]
+    fn password_names_are_unique_per_device_and_time() {
+        use chrono::TimeZone;
+        let t = chrono::Local
+            .with_ymd_and_hms(2026, 10, 13, 9, 5, 0)
+            .unwrap();
+        assert_eq!(
+            password_name("eli-mbp", t),
+            "WordPress Remote Editor (eli-mbp, 2026-10-13 09:05)"
+        );
+        assert_eq!(
+            password_name("  ", t),
+            "WordPress Remote Editor (2026-10-13 09:05)"
+        );
+        assert!(!password_name("bad\nname", t).contains('\n'));
     }
 
     #[test]

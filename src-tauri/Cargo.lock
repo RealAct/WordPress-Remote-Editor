@@ -5520,6 +5520,7 @@ version = "0.1.0"
 dependencies = [
  "base64 0.22.1",
  "chrono",
+ "gtk",
  "keyring",
  "log",
  "rand 0.8.8",

@@ -9,7 +9,7 @@ mod sites;
 mod wp;
 
 use std::sync::Mutex;
-use tauri::Manager;
+use tauri::{LogicalPosition, Manager};
 
 pub struct AppState {
     pub store: sites::SiteStore,
@@ -21,7 +21,7 @@ pub struct AppState {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            if let Some(w) = app.get_webview_window("main") {
+            if let Some(w) = app.get_window("main") {
                 w.unminimize().ok();
                 w.set_focus().ok();
             }
@@ -36,6 +36,7 @@ pub fn run() {
                 pending_auth: Mutex::new(None),
                 editor: Mutex::new(None),
             });
+            create_main_window(app)?;
             let menu = menu::build(app.handle())?;
             app.set_menu(menu)?;
             app.on_menu_event(|app, event| menu::forward(app, event.id().as_ref()));
@@ -58,4 +59,29 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running WordPress Remote Editor");
+}
+
+/// The main window is a plain window hosting two webviews: the shell UI
+/// (resized with the window) and, when open, the editor placed over the
+/// shell's editor area. Building it this way keeps child-webview layout
+/// identical on macOS, Windows and Linux.
+fn create_main_window(app: &mut tauri::App) -> tauri::Result<()> {
+    let config = app
+        .config()
+        .app
+        .windows
+        .iter()
+        .find(|w| w.label == "main")
+        .cloned()
+        .expect("main window missing from tauri.conf.json");
+    let window = tauri::window::WindowBuilder::from_config(app, &config)?.build()?;
+    let size = window
+        .inner_size()?
+        .to_logical::<f64>(window.scale_factor()?);
+    window.add_child(
+        tauri::webview::WebviewBuilder::from_config(&config).auto_resize(),
+        LogicalPosition::new(0.0, 0.0),
+        size,
+    )?;
+    Ok(())
 }

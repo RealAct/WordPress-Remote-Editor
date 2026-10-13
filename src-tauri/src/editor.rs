@@ -291,6 +291,7 @@ pub async fn open(
         LogicalPosition::new(b.x, b.y),
         LogicalSize::new(b.width, b.height),
     )?;
+    platform_layout(app, Some(b))?;
     *state.editor.lock().expect("poisoned") = Some(EditorSession { site_id });
     Ok(())
 }
@@ -300,7 +301,47 @@ pub fn set_bounds(app: &AppHandle, bounds: Bounds) -> AppResult<()> {
         let b = bounds.sane();
         w.set_position(LogicalPosition::new(b.x, b.y))?;
         w.set_size(LogicalSize::new(b.width, b.height))?;
+        platform_layout(app, Some(b))?;
     }
+    Ok(())
+}
+
+/// On Linux, Tauri stacks a window's webviews in a vertical GTK box and
+/// ignores explicit positions. The shell keeps the editor full-width below its
+/// toolbar (focus mode, the same layout as macOS and Windows), so on Linux the
+/// editor is packed at the bottom of the box with a height of "everything below
+/// the toolbar", and the shell, which expands, keeps the space above it.
+#[cfg(target_os = "linux")]
+fn platform_layout(app: &AppHandle, editor: Option<Bounds>) -> AppResult<()> {
+    use gtk::prelude::*;
+    let (Some(b), Some(window), Some(webview)) = (
+        editor,
+        app.get_window("main"),
+        app.get_webview(EDITOR_LABEL),
+    ) else {
+        return Ok(());
+    };
+    webview.with_webview(move |platform| {
+        let Ok(vbox) = window.default_vbox() else {
+            return;
+        };
+        let widget = platform.inner();
+        // Space used by non-webview children such as the menu bar.
+        let chrome: i32 = vbox
+            .children()
+            .iter()
+            .filter(|c| !c.type_().name().starts_with("WebKit"))
+            .map(|c| c.allocated_height())
+            .sum();
+        let height = (vbox.allocated_height() - chrome - b.y.round() as i32).max(1);
+        vbox.set_child_packing(&widget, false, false, 0, gtk::PackType::End);
+        widget.set_size_request(-1, height);
+    })?;
+    Ok(())
+}
+
+#[cfg(not(target_os = "linux"))]
+fn platform_layout(_app: &AppHandle, _editor: Option<Bounds>) -> AppResult<()> {
     Ok(())
 }
 
@@ -316,6 +357,7 @@ pub fn close(app: &AppHandle) -> AppResult<()> {
     if let Some(w) = app.get_webview(EDITOR_LABEL) {
         w.close()?;
     }
+    platform_layout(app, None)?;
     *app.state::<AppState>().editor.lock().expect("poisoned") = None;
     Ok(())
 }

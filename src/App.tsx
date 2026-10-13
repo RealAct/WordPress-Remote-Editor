@@ -191,7 +191,7 @@ export function App({ platform }: { platform: Platform }) {
   }, [leaveEditor, onSiteAdded, openEditor, startAddSite]);
 
   return (
-    <div className="app">
+    <div className={"app" + (view.kind === "editor" ? " editor-focus" : "")}>
       <Sidebar
         sites={sites}
         selectedSiteId={siteId}

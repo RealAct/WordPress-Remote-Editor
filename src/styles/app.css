@@ -195,8 +195,14 @@ h2 {
   border-top: 1px solid var(--border);
   margin-top: 0;
 }
-.sidebar-hidden .sidebar {
+.sidebar-hidden .sidebar,
+.app.editor-focus .sidebar {
   display: none;
+}
+/* Leave room for the traffic lights when the sidebar is hidden. */
+:root[data-platform="macos"] .app.editor-focus .toolbar,
+:root[data-platform="macos"].sidebar-hidden .toolbar {
+  padding-left: 84px;
 }
 .centered {
   flex: 1;
@@ -715,6 +721,7 @@ h2 {
   position: relative;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   background: var(--content-bg);
 }
 .editor-loading {

@@ -12,7 +12,12 @@
         "center": true,
         "dragDropEnabled": false,
         "transparent": true,
-        "windowEffects": { "effects": ["mica"] }
+        "windowEffects": {
+          "effects": [
+            "mica"
+          ]
+        },
+        "create": false
       }
     ]
   }
