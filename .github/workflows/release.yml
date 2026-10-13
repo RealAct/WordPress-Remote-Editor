@@ -6,6 +6,10 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to build and attach installers to (for example v0.1.0)
+        required: true
 
 permissions:
   contents: write
@@ -47,22 +51,38 @@ jobs:
 
       - run: npm ci
 
-      - uses: tauri-apps/tauri-action@v0
+      # macOS: Developer ID signing + notarization. The variables are only set
+      # when the secrets exist, because an empty APPLE_CERTIFICATE makes the
+      # bundler try (and fail) to import a certificate instead of skipping signing.
+      - name: Apple signing credentials
+        if: runner.os == 'macOS'
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # macOS: Developer ID signing + notarization
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -n "$APPLE_CERTIFICATE" ]; then
+            for name in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID; do
+              echo "::add-mask::${!name}"
+              { echo "$name<<__EOF__"; echo "${!name}"; echo "__EOF__"; } >> "$GITHUB_ENV"
+            done
+          else
+            echo "No Apple signing secrets set; building an unsigned app."
+          fi
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Update manifests are signed with minisign once the updater is enabled
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: WordPress Remote Editor ${{ github.ref_name }}
+          tagName: ${{ inputs.tag || github.ref_name }}
+          releaseName: WordPress Remote Editor ${{ inputs.tag || github.ref_name }}
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
