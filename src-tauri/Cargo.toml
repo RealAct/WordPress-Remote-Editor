@@ -1,6 +1,6 @@
 [package]
 name = "createpress"
-version = "0.2.0"
+version = "0.2.1"
 description = "A native desktop editor for WordPress sites"
 authors = ["Eli Linares"]
 license = "GPL-2.0-or-later"

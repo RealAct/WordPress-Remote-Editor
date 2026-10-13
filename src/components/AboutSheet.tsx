@@ -24,7 +24,7 @@ export function AboutSheet({ onClose }: { onClose: () => void }) {
         aria-labelledby="about-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <img className="about-icon" src="/app-icon.png" alt="" width={96} height={96} />
+        <img className="about-icon" src="/app-icon.svg" alt="" width={96} height={96} />
         <h2 id="about-title">CreatePress</h2>
         {version && <p className="about-version">Version {version}</p>}
         <p className="about-tagline">Write and publish on your WordPress sites with the full block editor.</p>

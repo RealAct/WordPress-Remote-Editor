@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- CreatePress app icon. icon.svg is the rounded tile (Linux, Windows, in-app); icon-macos.svg is the same art full-bleed, which macOS clips to its own shape. To regenerate: rsvg-convert -w 1024 -h 1024 icon.svg -o /tmp/i.png and npx tauri icon /tmp/i.png -o src-tauri/icons, then the same for icon-macos.svg into a scratch folder, copying only its icon.icns over (delete the android/ios folders). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#030c4a"/>
+      <stop offset="0.30" stop-color="#0a3f9c"/>
+      <stop offset="0.55" stop-color="#1497bd"/>
+      <stop offset="0.80" stop-color="#22d6c8"/>
+      <stop offset="1" stop-color="#29ead6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.22" cy="0.18" r="0.55">
+      <stop offset="0" stop-color="#1450d0" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#1450d0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="night" cx="0.78" cy="0.12" r="0.75">
+      <stop offset="0" stop-color="#010627" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#021040" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#021040" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sea" cx="0.95" cy="0.95" r="0.6">
+      <stop offset="0" stop-color="#16b493" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#16b493" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paper" gradientUnits="userSpaceOnUse" x1="640" y1="540" x2="1340" y2="1300">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#d3d8da"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.18"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>
+    <filter id="blur" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="14"/></filter>
+    <clipPath id="clip"><rect x="50" y="50" width="924" height="924" rx="208"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect x="50" y="50" width="924" height="924" rx="208" fill="url(#bg)"/>
+    <rect x="50" y="50" width="924" height="924" rx="208" fill="url(#glow)"/>
+    <rect x="50" y="50" width="924" height="924" rx="208" fill="url(#night)"/>
+    <rect x="50" y="50" width="924" height="924" rx="208" fill="url(#sea)"/>
+  </g>
+  <rect x="52" y="52" width="920" height="920" rx="206" fill="none" stroke="url(#rim)" stroke-width="4"/>
+  <g transform="translate(-135.74 -132.39) scale(0.67054)">
+    <!-- contact shadow under the plane -->
+    <ellipse cx="960" cy="1420" rx="330" ry="26" fill="#03304a" opacity="0.40" filter="url(#blur)"/>
+    <!-- lift shadow behind the mark -->
+    <g opacity="0.28" filter="url(#soft)" transform="translate(0 26)" fill="#021a3a">
+      <use href="#page"/><use href="#fold"/><use href="#plane"/>
+    </g>
+    <g fill="url(#paper)">
+      <path id="page" d="M657 1047 V618 Q657 535 742 533 H1019 V722 Q1019 843 1124 843 H1333 Q1000 950 657 1047 Z"/>
+      <path id="fold" d="M1053 537 L1333 813 H1126 Q1053 813 1053 740 Z"/>
+      <path id="plane" d="M1335 880 Q960 1000 595 1100 L817 1198 L1250 935 L1256 945 L962 1185 Q872 1262 862 1330 L845 1407 L962 1282 L1105 1355 Z"/>
+    </g>
+  </g>
+</svg>
