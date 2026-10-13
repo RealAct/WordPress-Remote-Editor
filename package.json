@@ -1,7 +1,7 @@
 {
   "name": "createpress",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "license": "GPL-2.0-or-later",
   "scripts": {
