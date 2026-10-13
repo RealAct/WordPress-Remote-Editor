@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset name="Remote Editor Bridge">
+  <description>WordPress Coding Standards for the companion plugin.</description>
+  <file>.</file>
+  <exclude-pattern>/vendor/*</exclude-pattern>
+  <arg name="extensions" value="php"/>
+  <arg value="sp"/>
+  <config name="testVersion" value="7.4-"/>
+  <config name="minimum_wp_version" value="6.4"/>
+  <rule ref="WordPress"/>
+  <rule ref="WordPress.WP.I18n">
+    <properties>
+      <property name="text_domain" type="array">
+        <element value="remote-editor-bridge"/>
+      </property>
+    </properties>
+  </rule>
+  <rule ref="WordPress.Files.FileName">
+    <properties>
+      <property name="is_theme" value="false"/>
+    </properties>
+    <exclude-pattern>remote-editor-bridge.php</exclude-pattern>
+  </rule>
+</ruleset>

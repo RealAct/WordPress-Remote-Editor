@@ -1,0 +1,31 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main",
+  "description": "The bundled shell UI webview only (not the editor child webview in the same window). It never receives credentials and cannot call editor_report.",
+  "webviews": ["main"],
+  "local": true,
+  "permissions": [
+    "core:default",
+    "core:window:allow-start-dragging",
+    "os:default",
+    "dialog:allow-ask",
+    "dialog:allow-message",
+    "dialog:allow-confirm",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [{ "url": "https://*" }, { "url": "http://localhost*" }]
+    },
+    "allow-discover-site",
+    "allow-begin-authorization",
+    "allow-add-site-manual",
+    "allow-list-sites",
+    "allow-remove-site",
+    "allow-get-site-context",
+    "allow-list-posts",
+    "allow-trash-post",
+    "allow-open-editor",
+    "allow-close-editor",
+    "allow-editor-set-bounds",
+    "allow-editor-command"
+  ]
+}
