@@ -1,18 +1,18 @@
-=== Remote Editor Bridge ===
+=== CreatePress Bridge ===
 Contributors: realact
 Tags: block editor, gutenberg, desktop, application passwords, remote editing
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Companion plugin for the WordPress Remote Editor desktop app.
+Companion plugin for the CreatePress desktop app.
 
 == Description ==
 
-WordPress Remote Editor is a desktop app for macOS, Windows and Linux that edits your site with its own block editor, so every block plugin you use keeps working.
+CreatePress is a desktop app for macOS, Windows and Linux that edits your site with its own block editor, so every block plugin you use keeps working.
 
 This optional plugin improves that experience:
 

@@ -54,12 +54,15 @@ pub fn run() {
             commands::open_editor,
             commands::close_editor,
             commands::editor_set_bounds,
+            commands::editor_set_hidden,
             commands::editor_command,
             commands::editor_report,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running WordPress Remote Editor");
+        .expect("error while running CreatePress");
 }
+
+const SHELL_FREEZE_PROTOTYPE: &str = "Object.freeze(Object.prototype);";
 
 /// The main window is a plain window hosting two webviews: the shell UI
 /// (resized with the window) and, when open, the editor placed over the
@@ -78,10 +81,29 @@ fn create_main_window(app: &mut tauri::App) -> tauri::Result<()> {
     let size = window
         .inner_size()?
         .to_logical::<f64>(window.scale_factor()?);
+    // Freeze Object.prototype in the shell only. Tauri's app-wide
+    // `freezePrototype` option also injects into the editor webview, where it
+    // breaks WordPress's own scripts (moment, @wordpress/components) and the
+    // block editor never renders, leaving a blank pane.
     window.add_child(
-        tauri::webview::WebviewBuilder::from_config(&config).auto_resize(),
+        tauri::webview::WebviewBuilder::from_config(&config)
+            .initialization_script(SHELL_FREEZE_PROTOTYPE)
+            .auto_resize(),
         LogicalPosition::new(0.0, 0.0),
         size,
     )?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    /// Regression: the app-wide option reaches the editor webview and leaves
+    /// New Post / New Page blank. The shell freezes its own prototype instead.
+    #[test]
+    fn prototype_freeze_is_shell_only() {
+        let conf: serde_json::Value =
+            serde_json::from_str(include_str!("../tauri.conf.json")).unwrap();
+        assert_eq!(conf["app"]["security"]["freezePrototype"], false);
+        assert!(super::SHELL_FREEZE_PROTOTYPE.contains("Object.freeze(Object.prototype)"));
+    }
 }

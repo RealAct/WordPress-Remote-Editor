@@ -3,6 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import { ask, message } from "@tauri-apps/plugin-dialog";
 import { api, errorMessage, type EditorReport, type PostTypeAccess, type SiteContext, type SiteSummary } from "./lib/api";
 import type { Platform } from "./lib/platform";
+import { AboutSheet } from "./components/AboutSheet";
 import { AddSiteSheet } from "./components/AddSiteSheet";
 import { EditorView } from "./components/EditorView";
 import { Icon } from "./components/Icon";
@@ -23,6 +24,7 @@ export function App({ platform }: { platform: Platform }) {
   const [waitingForBrowser, setWaitingForBrowser] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [showAbout, setShowAbout] = useState(false);
 
   // Refs so native event handlers always see current state.
   const state = useRef({ view, report, context, postType });
@@ -132,6 +134,16 @@ export function App({ platform }: { platform: Platform }) {
     [refreshSites],
   );
 
+  // The editor pane is a separate webview drawn above the shell, so hide it
+  // while the About sheet is open.
+  const editorOpen = view.kind === "editor";
+  useEffect(() => {
+    if (!showAbout || !editorOpen) return;
+    void api.setEditorHidden(true).catch(() => {});
+    return () => void api.setEditorHidden(false).catch(() => {});
+  }, [showAbout, editorOpen]);
+  const closeAbout = useCallback(() => setShowAbout(false), []);
+
   // Native events: auth results, editor state, menu actions.
   useEffect(() => {
     const unlisten = [
@@ -180,6 +192,9 @@ export function App({ platform }: { platform: Platform }) {
           case "add-site":
             void startAddSite();
             return;
+          case "about":
+            setShowAbout(true);
+            return;
           case "toggle-sidebar":
             document.documentElement.classList.toggle("sidebar-hidden");
             window.dispatchEvent(new Event("resize"));
@@ -201,6 +216,7 @@ export function App({ platform }: { platform: Platform }) {
         onSelectType={selectType}
         onAddSite={startAddSite}
         onRemoveSite={removeSite}
+        onAbout={() => setShowAbout(true)}
       />
       <main className="main">
         {sites.length === 0 ? (
@@ -239,6 +255,7 @@ export function App({ platform }: { platform: Platform }) {
           onCancel={() => setAdding(false)}
         />
       )}
+      {showAbout && <AboutSheet onClose={closeAbout} />}
     </div>
   );
 }
@@ -249,7 +266,7 @@ function Welcome({ onAdd, platform }: { onAdd: () => void; platform: Platform })
       <div className="welcome-icon">
         <Icon name="post" size={44} />
       </div>
-      <h1>Welcome to WordPress Remote Editor</h1>
+      <h1>Welcome to CreatePress</h1>
       <p>
         Write and publish on your WordPress sites with the full block editor, including blocks from your plugins.
         Your sign-in is kept in the {platform === "macos" ? "macOS Keychain" : platform === "windows" ? "Windows Credential Manager" : "system keyring"}.

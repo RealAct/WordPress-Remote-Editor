@@ -5,10 +5,10 @@
  * The app also injects equivalent styles itself, so this is a progressive
  * enhancement that avoids a flash of wp-admin chrome while loading.
  *
- * @package RemoteEditorBridge
+ * @package CreatePressBridge
  */
 
-namespace RemoteEditorBridge;
+namespace CreatePressBridge;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -41,7 +41,7 @@ final class Embedded_Mode {
 	 * @return string
 	 */
 	public static function body_class( $classes ) {
-		return self::is_embedded() ? $classes . ' wpre-embedded' : $classes;
+		return self::is_embedded() ? $classes . ' createpress-embedded' : $classes;
 	}
 
 	/**
@@ -56,7 +56,7 @@ final class Embedded_Mode {
 			return;
 		}
 		wp_enqueue_style(
-			'remote-editor-bridge-embedded',
+			'createpress-bridge-embedded',
 			plugins_url( 'assets/embedded.css', __DIR__ ),
 			array(),
 			VERSION

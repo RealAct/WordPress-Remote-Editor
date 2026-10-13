@@ -1,6 +1,6 @@
 {
-  "name": "realact/remote-editor-bridge",
-  "description": "Companion plugin for the WordPress Remote Editor desktop app.",
+  "name": "realact/createpress-bridge",
+  "description": "Companion plugin for the CreatePress desktop app.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "require": {

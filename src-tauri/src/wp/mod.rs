@@ -3,7 +3,7 @@ pub mod discovery;
 pub mod models;
 
 /// Live tests against a real WordPress site. Run with:
-/// `WPRE_TEST_SITE=… WPRE_TEST_USER=… WPRE_TEST_APP_PASSWORD=… cargo test -- --ignored`
+/// `CREATEPRESS_TEST_SITE=… CREATEPRESS_TEST_USER=… CREATEPRESS_TEST_APP_PASSWORD=… cargo test -- --ignored`
 #[cfg(test)]
 mod live_tests {
     use super::client::WpClient;
@@ -14,9 +14,9 @@ mod live_tests {
 
     fn env() -> Option<(String, String, String)> {
         Some((
-            std::env::var("WPRE_TEST_SITE").ok()?,
-            std::env::var("WPRE_TEST_USER").ok()?,
-            std::env::var("WPRE_TEST_APP_PASSWORD").ok()?,
+            std::env::var("CREATEPRESS_TEST_SITE").ok()?,
+            std::env::var("CREATEPRESS_TEST_USER").ok()?,
+            std::env::var("CREATEPRESS_TEST_APP_PASSWORD").ok()?,
         ))
     }
 
@@ -79,7 +79,7 @@ mod live_tests {
             let target = d.admin_url.join("post-new.php").unwrap();
             let h: Handoff = client
                 .post(
-                    "wpre/v1/handoff",
+                    "createpress/v1/handoff",
                     &serde_json::json!({ "redirect_to": target.as_str() }),
                 )
                 .await
@@ -88,7 +88,7 @@ mod live_tests {
             assert!(crate::security::same_origin(&d.admin_url, &url));
             assert!(url
                 .query_pairs()
-                .any(|(k, v)| k == "action" && v == "wpre_handoff"));
+                .any(|(k, v)| k == "action" && v == "createpress_handoff"));
             println!("  handoff ok");
         }
     }

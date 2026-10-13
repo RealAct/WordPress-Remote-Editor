@@ -7,10 +7,10 @@
  * seconds, for that user only. Opening it in the app's editor webview sets the
  * normal WordPress auth cookie and redirects to the block editor.
  *
- * @package RemoteEditorBridge
+ * @package CreatePressBridge
  */
 
-namespace RemoteEditorBridge;
+namespace CreatePressBridge;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,12 +21,12 @@ final class Handoff {
 
 	const TTL            = 60;
 	const MAX_PER_MINUTE = 10;
-	const TRANSIENT      = 'wpre_handoff_';
-	const RATE_TRANSIENT = 'wpre_handoff_rate_';
-	const EMBED_COOKIE   = 'wpre_embedded';
+	const TRANSIENT      = 'createpress_handoff_';
+	const RATE_TRANSIENT = 'createpress_handoff_rate_';
+	const EMBED_COOKIE   = 'createpress_embedded';
 
 	/**
-	 * Registers REST routes under wpre/v1.
+	 * Registers REST routes under createpress/v1.
 	 */
 	public static function register_routes() {
 		register_rest_route(
@@ -69,15 +69,15 @@ final class Handoff {
 	public static function can_issue() {
 		if ( ! is_user_logged_in() || ! rest_get_authenticated_app_password() ) {
 			return new \WP_Error(
-				'wpre_app_password_required',
-				__( 'Sign-in handoff requires Application Password authentication.', 'remote-editor-bridge' ),
+				'createpress_app_password_required',
+				__( 'Sign-in handoff requires Application Password authentication.', 'createpress-bridge' ),
 				array( 'status' => 401 )
 			);
 		}
 		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
 			return new \WP_Error(
-				'wpre_forbidden',
-				__( 'Your role cannot edit content on this site.', 'remote-editor-bridge' ),
+				'createpress_forbidden',
+				__( 'Your role cannot edit content on this site.', 'createpress-bridge' ),
 				array( 'status' => 403 )
 			);
 		}
@@ -123,8 +123,8 @@ final class Handoff {
 		$redirect = self::safe_editor_url( (string) $request->get_param( 'redirect_to' ) );
 		if ( null === $redirect ) {
 			return new \WP_Error(
-				'wpre_bad_redirect',
-				__( 'The editor address is not allowed.', 'remote-editor-bridge' ),
+				'createpress_bad_redirect',
+				__( 'The editor address is not allowed.', 'createpress-bridge' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -133,8 +133,8 @@ final class Handoff {
 		$count    = (int) get_transient( $rate_key );
 		if ( $count >= self::MAX_PER_MINUTE ) {
 			return new \WP_Error(
-				'wpre_rate_limited',
-				__( 'Too many sign-in requests. Please wait a minute.', 'remote-editor-bridge' ),
+				'createpress_rate_limited',
+				__( 'Too many sign-in requests. Please wait a minute.', 'createpress-bridge' ),
 				array( 'status' => 429 )
 			);
 		}
@@ -153,7 +153,7 @@ final class Handoff {
 
 		$url = add_query_arg(
 			array(
-				'action' => 'wpre_handoff',
+				'action' => 'createpress_handoff',
 				'token'  => rawurlencode( $token ),
 			),
 			wp_login_url()
@@ -165,7 +165,7 @@ final class Handoff {
 	}
 
 	/**
-	 * Runs on wp-login.php?action=wpre_handoff: verifies the token, signs the
+	 * Runs on wp-login.php?action=createpress_handoff: verifies the token, signs the
 	 * user in and redirects to the editor.
 	 */
 	public static function consume() {
@@ -223,8 +223,8 @@ final class Handoff {
 	 */
 	private static function fail() {
 		wp_die(
-			esc_html__( 'This sign-in link has expired or was already used. Return to WordPress Remote Editor and try again.', 'remote-editor-bridge' ),
-			esc_html__( 'Sign-in link expired', 'remote-editor-bridge' ),
+			esc_html__( 'This sign-in link has expired or was already used. Return to CreatePress and try again.', 'createpress-bridge' ),
+			esc_html__( 'Sign-in link expired', 'createpress-bridge' ),
 			array( 'response' => 403 )
 		);
 	}

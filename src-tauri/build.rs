@@ -15,6 +15,7 @@ fn main() {
             "open_editor",
             "close_editor",
             "editor_set_bounds",
+            "editor_set_hidden",
             "editor_command",
             "editor_report",
         ]),

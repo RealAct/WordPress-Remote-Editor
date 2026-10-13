@@ -26,6 +26,7 @@
     "allow-open-editor",
     "allow-close-editor",
     "allow-editor-set-bounds",
+    "allow-editor-set-hidden",
     "allow-editor-command"
   ]
 }

@@ -128,7 +128,7 @@ export function AddSiteSheet({ waitingForBrowser, authError, onStartedAuthorizat
             </div>
             {waitingForBrowser ? (
               <p className="sheet-intro waiting">
-                Approve <strong>WordPress Remote Editor</strong> in the sign-in window. This sheet updates when you're done.
+                Approve <strong>CreatePress</strong> in the sign-in window. This sheet updates when you're done.
               </p>
             ) : (
               <p className="sheet-intro">

@@ -1,9 +1,9 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "WordPress Remote Editor",
-  "mainBinaryName": "wordpress-remote-editor",
-  "version": "0.1.0",
-  "identifier": "com.wpremoteeditor.app",
+  "productName": "CreatePress",
+  "mainBinaryName": "createpress",
+  "version": "0.2.0",
+  "identifier": "net.realact.createpress",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -16,7 +16,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "WordPress Remote Editor",
+        "title": "CreatePress",
         "width": 1280,
         "height": 820,
         "minWidth": 900,
@@ -27,7 +27,7 @@
       }
     ],
     "security": {
-      "freezePrototype": true,
+      "freezePrototype": false,
       "csp": {
         "default-src": "'self'",
         "script-src": "'self'",
@@ -54,9 +54,9 @@
     "category": "Productivity",
     "shortDescription": "A native desktop editor for WordPress sites",
     "longDescription": "Write and publish posts and pages on your WordPress sites with the full block editor, including blocks from any plugin, in a native desktop app.",
-    "copyright": "\u00a9 WordPress Remote Editor contributors",
+    "copyright": "\u00a9 2026 Eli Linares",
     "license": "GPL-2.0-or-later",
-    "publisher": "WordPress Remote Editor",
+    "publisher": "Eli Linares",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

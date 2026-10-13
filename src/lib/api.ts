@@ -116,6 +116,7 @@ export const api = {
     invoke<void>("open_editor", { siteId, postType, postId, bounds }),
   closeEditor: () => invoke<void>("close_editor"),
   setEditorBounds: (bounds: Bounds) => invoke<void>("editor_set_bounds", { bounds }),
+  setEditorHidden: (hidden: boolean) => invoke<void>("editor_set_hidden", { hidden }),
   editorCommand: (command: EditorCommand) => invoke<void>("editor_command", { command }),
 };
 

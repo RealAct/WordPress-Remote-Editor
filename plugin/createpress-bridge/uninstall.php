@@ -3,7 +3,7 @@
  * Cleans up on uninstall. Handoff tokens are short-lived transients, so there
  * is no persistent data to remove beyond any that remain.
  *
- * @package RemoteEditorBridge
+ * @package CreatePressBridge
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
@@ -13,7 +13,7 @@ global $wpdb;
 $wpdb->query(
 	$wpdb->prepare(
 		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-		$wpdb->esc_like( '_transient_wpre_handoff_' ) . '%',
-		$wpdb->esc_like( '_transient_timeout_wpre_handoff_' ) . '%'
+		$wpdb->esc_like( '_transient_createpress_handoff_' ) . '%',
+		$wpdb->esc_like( '_transient_timeout_createpress_handoff_' ) . '%'
 	)
 );

@@ -1,0 +1,21 @@
+/* Hide wp-admin chrome around the block editor inside the desktop app. */
+html.wp-toolbar:has(body.createpress-embedded) {
+	padding-top: 0;
+}
+
+body.createpress-embedded #wpadminbar,
+body.createpress-embedded #adminmenumain,
+body.createpress-embedded #wpfooter,
+body.createpress-embedded .edit-post-fullscreen-mode-close,
+body.createpress-embedded .editor-header__back-button {
+	display: none !important;
+}
+
+body.createpress-embedded #wpcontent {
+	margin-left: 0;
+}
+
+body.createpress-embedded .interface-interface-skeleton {
+	top: 0;
+	left: 0;
+}
