@@ -1,9 +1,7 @@
 //! Native application menu. Standard Edit items matter on macOS: without them
 //! clipboard shortcuts don't reach the webviews.
 
-use tauri::menu::{
-    AboutMetadata, Menu, MenuBuilder, MenuItemBuilder, PredefinedMenuItem, SubmenuBuilder,
-};
+use tauri::menu::{AboutMetadata, Menu, MenuBuilder, MenuItemBuilder, SubmenuBuilder};
 use tauri::{AppHandle, Emitter, Runtime};
 
 pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<Menu<R>> {
@@ -25,7 +23,9 @@ pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<Menu<R>> {
         .item(&item("add-site", "Add Site…", None)?)
         .item(&item("close-editor", "Close Editor", Some("CmdOrCtrl+W"))?);
     #[cfg(not(target_os = "macos"))]
-    let file = file.separator().item(&PredefinedMenuItem::quit(app, None)?);
+    let file = file
+        .separator()
+        .item(&tauri::menu::PredefinedMenuItem::quit(app, None)?);
     let file = file.build()?;
 
     let edit = SubmenuBuilder::new(app, "Edit")
