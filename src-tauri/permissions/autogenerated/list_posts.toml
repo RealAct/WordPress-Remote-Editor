@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-list-posts"
+description = "Enables the list_posts command without any pre-configured scope."
+commands.allow = ["list_posts"]
+
+[[permission]]
+identifier = "deny-list-posts"
+description = "Denies the list_posts command without any pre-configured scope."
+commands.deny = ["list_posts"]
