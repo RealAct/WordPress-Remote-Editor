@@ -1,6 +1,6 @@
 # Security Model
 
-WordPress Remote Editor holds credentials for websites and renders remote content, so it is designed around least privilege and isolation.
+CreatePress holds credentials for websites and renders remote content, so it is designed around least privilege and isolation.
 
 ## Credentials
 
@@ -21,7 +21,7 @@ WordPress Remote Editor holds credentials for websites and renders remote conten
 
 - Authorization happens on the site's own `authorize-application.php` page, so 2FA, SSO and security plugins work unchanged.
 - The sign-in window is incognito (no persistent cookies) and has no IPC access.
-- The callback (`wpremoteeditor://…`) is intercepted inside that window, not registered with the OS, so another app cannot hijack it. A 256-bit `state` value is checked in constant time.
+- The callback (`createpress://…`) is intercepted inside that window, not registered with the OS, so another app cannot hijack it. A 256-bit `state` value is checked in constant time.
 
 ## Webviews
 
@@ -34,8 +34,9 @@ WordPress Remote Editor holds credentials for websites and renders remote conten
 - The editor webview's navigation is locked to the site's origins; other links open in the system browser.
 - Each site has its own cookie/data store, deleted when the site is removed.
 - The core controls the editor only by evaluating fixed, built-in scripts. It never evaluates strings that come from a page.
+- `Object.prototype` is frozen in the shell only (an initialization script on that webview). Tauri's app-wide `freezePrototype` option is off because it would also apply to the editor webview, where it breaks WordPress's own scripts and leaves the editor blank.
 
-## Companion plugin (`remote-editor-bridge`)
+## Companion plugin (`createpress-bridge`)
 
 - Handoff links can only be requested over REST with Application Password authentication by users who can edit content.
 - Tokens are 48 random characters, single use, valid for 60 seconds, stored only as an HMAC-SHA256 hash, rate limited to 10/minute per user, and can only redirect to `post.php`/`post-new.php`.

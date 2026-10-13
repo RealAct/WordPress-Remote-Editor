@@ -1,4 +1,4 @@
-# WordPress Remote Editor: Architecture
+# CreatePress: Architecture
 
 ## Goals
 
@@ -68,7 +68,7 @@ The shell UI is React, but it is *platform-adaptive*, not a single web look:
 WordPress **Application Passwords** (core since 5.6) are used for all REST traffic.
 
 1. **Discovery**: fetch the site, follow the `Link: <…>; rel="https://api.w.org/"` header to the REST index, read `authentication["application-passwords"].endpoints.authorization`. Works with pretty and plain permalinks (`?rest_route=`).
-2. **Authorise**: open WordPress's own `authorize-application.php` in an isolated, incognito auth window. The user signs in with their normal login (2FA, SSO and security plugins keep working) and approves "WordPress Remote Editor". `success_url` is `wpremoteeditor://auth/callback?state=…`; the core intercepts that navigation inside its own webview (so no other app can register the scheme and steal it), checks `state`, and stores the password.
+2. **Authorise**: open WordPress's own `authorize-application.php` in an isolated, incognito auth window. The user signs in with their normal login (2FA, SSO and security plugins keep working) and approves "CreatePress". `success_url` is `createpress://auth/callback?state=…`; the core intercepts that navigation inside its own webview (so no other app can register the scheme and steal it), checks `state`, and stores the password.
 3. **Manual fallback**: paste a username and an Application Password created under Users → Profile.
 4. **Storage**: the password goes straight into the OS keychain (macOS Keychain, Windows Credential Manager, Secret Service/libsecret on Linux) and is held in memory only in zeroizing buffers.
 5. **Removal**: removing a site revokes its Application Password on the server (using `/application-passwords/introspect` to find its UUID) and deletes the keychain entry.
@@ -77,7 +77,7 @@ WordPress **Application Passwords** (core since 5.6) are used for all REST traff
 
 wp-admin uses cookie authentication, which Application Passwords can't provide. Two modes:
 
-- **With the companion plugin** (`plugin/wp-remote-editor-bridge`, recommended): the core calls `POST /wpre/v1/handoff` authenticated by the Application Password. The plugin returns a single-use, 60-second, hashed token bound to that user; the editor webview opens `wp-login.php?action=wpre_handoff&token=…`, which sets the normal auth cookie and redirects into the editor. No second login.
+- **With the companion plugin** (`plugin/createpress-bridge`, recommended): the core calls `POST /createpress/v1/handoff` authenticated by the Application Password. The plugin returns a single-use, 60-second, hashed token bound to that user; the editor webview opens `wp-login.php?action=createpress_handoff&token=…`, which sets the normal auth cookie and redirects into the editor. No second login.
 - **Without the plugin**: the user signs in once inside the editor webview using the site's own login form. The cookie lives in that site's isolated store.
 
 ## Roles and capabilities
@@ -92,7 +92,7 @@ wp-admin uses cookie authentication, which Application Passwords can't provide. 
 src/                     React shell (platform-adaptive UI)
 src-tauri/               Rust core: REST client, auth, keychain, editor webview
   capabilities/          Tauri capability files (least privilege)
-plugin/wp-remote-editor-bridge/   Optional companion WordPress plugin (GPL-2.0-or-later, WPCS)
+plugin/createpress-bridge/   Optional companion WordPress plugin (GPL-2.0-or-later, WPCS)
 .github/workflows/       CI (lint, test, phpcs) and signed release builds
 docs/                    Architecture and security notes
 ```

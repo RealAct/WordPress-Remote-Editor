@@ -1,4 +1,4 @@
-# WordPress Remote Editor
+# CreatePress
 
 A native desktop app for macOS, Windows and Linux that lets you write and publish posts and pages on any WordPress site, using the site's full block editor (Gutenberg), with every block plugin installed on that site working exactly as it does in wp-admin.
 
@@ -16,7 +16,7 @@ On the WordPress site:
 
 - WordPress 6.4 or newer, served over HTTPS.
 - Application Passwords enabled (the default in WordPress core; some security plugins or hosts turn them off).
-- Optional but recommended: the **Remote Editor Bridge** plugin from [`plugin/remote-editor-bridge`](plugin/remote-editor-bridge), which removes the second sign-in when opening the editor.
+- Optional but recommended: the **CreatePress Bridge** plugin from [`plugin/createpress-bridge`](plugin/createpress-bridge), which removes the second sign-in when opening the editor.
 
 On your computer: macOS 14+, Windows 10/11 (WebView2 is installed automatically if missing), or a Debian/Ubuntu-based Linux with WebKitGTK 4.1.
 
@@ -39,14 +39,14 @@ Live tests against a real site (for example a local one on `http://localhost:888
 
 ```sh
 cd src-tauri
-WPRE_TEST_SITE=https://example.com WPRE_TEST_USER=me WPRE_TEST_APP_PASSWORD="xxxx xxxx xxxx xxxx xxxx xxxx" \
+CREATEPRESS_TEST_SITE=https://example.com CREATEPRESS_TEST_USER=me CREATEPRESS_TEST_APP_PASSWORD="xxxx xxxx xxxx xxxx xxxx xxxx" \
   cargo test live_tests -- --ignored --nocapture
 ```
 
 Companion plugin checks:
 
 ```sh
-cd plugin/remote-editor-bridge
+cd plugin/createpress-bridge
 composer install
 vendor/bin/phpcs
 ```
@@ -68,12 +68,16 @@ Pushing a `v*` tag runs [`.github/workflows/release.yml`](.github/workflows/rele
 | `src/` | Platform-adaptive React shell UI |
 | `src-tauri/src/` | Rust core: REST client, sign-in, keychain, editor webview, menus |
 | `src-tauri/capabilities/` | Least-privilege permission grants for each webview |
-| `plugin/remote-editor-bridge/` | Optional companion WordPress plugin |
+| `plugin/createpress-bridge/` | Optional companion WordPress plugin |
 | `docs/` | Architecture and security notes |
 
-## Name and trademark
+## Trademark
 
-"WordPress" is a registered trademark of the WordPress Foundation. Its trademark policy restricts using "WordPress" in product names, so the app name should be cleared (or changed to something like "Remote Editor for WordPress") before public distribution. The companion plugin already uses a compliant name.
+"WordPress" is a registered trademark of the WordPress Foundation. CreatePress is an independent app and is not affiliated with or endorsed by the WordPress Foundation.
+
+## About
+
+CreatePress is developed by [Eli Linares](https://realact.net).
 
 ## License
 

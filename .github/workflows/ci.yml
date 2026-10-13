@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: plugin/remote-editor-bridge
+        working-directory: plugin/createpress-bridge
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2

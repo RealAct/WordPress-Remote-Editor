@@ -12,6 +12,7 @@ interface Props {
   onSelectType: (t: PostTypeAccess) => void;
   onAddSite: () => void;
   onRemoveSite: (site: SiteSummary) => void;
+  onAbout: () => void;
 }
 
 export function Sidebar(props: Props) {
@@ -73,6 +74,15 @@ export function Sidebar(props: Props) {
             </ul>
           </div>
         )}
+      </div>
+
+      <div className="sidebar-about">
+        <button className="sidebar-item subtle" onClick={props.onAbout}>
+          <span className="icon-tile">
+            <Icon name="info" size={14} />
+          </span>
+          <span className="label">About CreatePress</span>
+        </button>
       </div>
 
       {context && (

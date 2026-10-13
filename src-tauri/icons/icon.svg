@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Source for every app icon size. After editing: rsvg-convert -w 1024 -h 1024 icon.svg -o icon-1024.png, then npx tauri icon icon-1024.png -o src-tauri/icons (and delete the android/ios folders) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4f7bff"/>
+      <stop offset="1" stop-color="#1c35bd"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffc94a"/>
+      <stop offset="0.5" stop-color="#ffb21f"/>
+      <stop offset="1" stop-color="#f29a0c"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <g transform="translate(-36 0)">
+  <!-- Paper -->
+  <rect x="212" y="148" width="520" height="712" rx="60" fill="#0b1a66" opacity="0.35" filter="url(#shadow)" transform="translate(0 18)"/>
+  <rect x="212" y="148" width="520" height="712" rx="60" fill="#ffffff"/>
+  <rect x="300" y="262" width="344" height="48" rx="24" fill="#3550d0"/>
+  <rect x="300" y="362" width="290" height="44" rx="22" fill="#a9b7ee"/>
+  <rect x="300" y="456" width="344" height="44" rx="22" fill="#a9b7ee"/>
+  <rect x="300" y="550" width="230" height="44" rx="22" fill="#a9b7ee"/>
+
+  <!-- Pencil, drawn pointing left from its tip, then turned up and to the right -->
+  <g transform="translate(548 848) rotate(-45)">
+    <g opacity="0.35" filter="url(#shadow)" transform="translate(10 22)">
+      <path d="M0 0 L100 -56 H560 a20 20 0 0 1 20 20 V36 a20 20 0 0 1 -20 20 H100 Z" fill="#0b1a66"/>
+    </g>
+    <path d="M0 0 L100 -56 V56 Z" fill="#f6d7a6"/>
+    <path d="M0 0 L38 -21.3 V21.3 Z" fill="#2b2d3a"/>
+    <rect x="100" y="-56" width="360" height="112" fill="url(#body)"/>
+    <rect x="100" y="-18" width="360" height="36" fill="#ffd36b" opacity="0.55"/>
+    <rect x="460" y="-56" width="48" height="112" fill="#cfd5e3"/>
+    <rect x="472" y="-56" width="8" height="112" fill="#aab2c5"/>
+    <rect x="488" y="-56" width="8" height="112" fill="#aab2c5"/>
+    <path d="M508 -56 H560 a20 20 0 0 1 20 20 V36 a20 20 0 0 1 -20 20 H508 Z" fill="#ff7b8f"/>
+  </g>
+  </g>
+</svg>

@@ -82,7 +82,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ inputs.tag || github.ref_name }}
-          releaseName: WordPress Remote Editor ${{ inputs.tag || github.ref_name }}
+          releaseName: CreatePress ${{ inputs.tag || github.ref_name }}
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
@@ -94,9 +94,9 @@ jobs:
       - name: Package the companion plugin
         run: |
           cd plugin
-          zip -r ../remote-editor-bridge.zip remote-editor-bridge -x 'remote-editor-bridge/vendor/*' 'remote-editor-bridge/composer.*' 'remote-editor-bridge/phpcs.xml.dist'
+          zip -r ../createpress-bridge.zip createpress-bridge -x 'createpress-bridge/vendor/*' 'createpress-bridge/composer.*' 'createpress-bridge/phpcs.xml.dist'
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           draft: true
-          files: remote-editor-bridge.zip
+          files: createpress-bridge.zip

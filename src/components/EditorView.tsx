@@ -128,7 +128,7 @@ export function EditorView({ context, postType, postId, report, onBack }: Props)
       {report?.kind === "login" && (
         <div className="banner info">
           Sign in to {context.site.name} once below to open the editor.
-          {!context.site.bridgeAvailable && " Install the Remote Editor Bridge plugin on the site to skip this step."}
+          {!context.site.bridgeAvailable && " Install the CreatePress Bridge plugin on the site to skip this step."}
         </div>
       )}
       {error && (

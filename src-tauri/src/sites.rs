@@ -151,7 +151,7 @@ mod tests {
 
     #[test]
     fn upsert_dedupes_and_persists() {
-        let dir = std::env::temp_dir().join(format!("wpre-test-{}", Uuid::new_v4()));
+        let dir = std::env::temp_dir().join(format!("createpress-test-{}", Uuid::new_v4()));
         let path = dir.join("sites.json");
         let store = SiteStore::load(path.clone());
         let a = store.upsert(record("https://a.com/", "eli")).unwrap();

@@ -100,7 +100,7 @@ pub async fn discover(input: &str, allow_insecure_local: bool) -> AppResult<Site
         api_root,
         supports_application_passwords: authorization_endpoint.is_some(),
         authorization_endpoint,
-        bridge_available: index.namespaces.iter().any(|n| n == "wpre/v1"),
+        bridge_available: index.namespaces.iter().any(|n| n == "createpress/v1"),
     })
 }
 

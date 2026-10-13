@@ -245,6 +245,13 @@ pub fn editor_set_bounds(app: AppHandle, bounds: Bounds) -> AppResult<()> {
     editor::set_bounds(&app, bounds)
 }
 
+/// Hides the editor pane while a shell sheet (such as About) is shown, since
+/// the pane is a separate webview drawn above the shell.
+#[tauri::command]
+pub fn editor_set_hidden(app: AppHandle, hidden: bool) -> AppResult<()> {
+    editor::set_hidden(&app, hidden)
+}
+
 #[tauri::command]
 pub fn editor_command(app: AppHandle, command: EditorCommand) -> AppResult<()> {
     editor::command(&app, command)

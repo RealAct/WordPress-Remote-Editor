@@ -4,4 +4,4 @@ src-tauri/target/
 src-tauri/gen/schemas/
 *.log
 .DS_Store
-plugin/remote-editor-bridge/vendor/
+plugin/createpress-bridge/vendor/

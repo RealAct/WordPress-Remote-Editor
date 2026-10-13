@@ -867,3 +867,61 @@ h2 {
     animation: none;
   }
 }
+
+/* ---- About ------------------------------------------------------------- */
+.sheet.about {
+  width: min(360px, calc(100vw - 32px));
+  text-align: center;
+}
+.about-icon {
+  display: block;
+  margin: 4px auto 10px;
+  border-radius: 22px;
+}
+.sheet.about h2 {
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+.about-version {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin: 0 0 10px;
+}
+.about-tagline {
+  margin: 0 0 14px;
+  line-height: 1.45;
+}
+.about-credits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+  margin: 0 0 14px;
+}
+.about-credits dt {
+  text-align: right;
+  color: var(--text-muted);
+}
+.about-credits dd {
+  margin: 0;
+  text-align: left;
+  font-weight: 500;
+}
+.about-credits a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.about-credits a:hover {
+  text-decoration: underline;
+}
+.about-legal {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.4;
+  margin: 0 0 12px;
+}
+.sheet.about .sheet-actions {
+  justify-content: center;
+}
+.sidebar-about {
+  padding: 0 10px 8px;
+}

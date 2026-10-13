@@ -1,7 +1,7 @@
 //! Native application menu. Standard Edit items matter on macOS: without them
 //! clipboard shortcuts don't reach the webviews.
 
-use tauri::menu::{AboutMetadata, Menu, MenuBuilder, MenuItemBuilder, SubmenuBuilder};
+use tauri::menu::{Menu, MenuBuilder, MenuItemBuilder, SubmenuBuilder};
 use tauri::{AppHandle, Emitter, Runtime};
 
 pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<Menu<R>> {
@@ -64,16 +64,20 @@ pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<Menu<R>> {
         .close_window()
         .build()?;
 
-    let help = SubmenuBuilder::new(app, "Help")
-        .item(&item("help-docs", "WordPress Remote Editor Help", None)?)
-        .build()?;
+    let help = SubmenuBuilder::new(app, "Help").item(&item("help-docs", "CreatePress Help", None)?);
+    // On macOS, About lives in the app menu instead.
+    #[cfg(not(target_os = "macos"))]
+    let help = help
+        .separator()
+        .item(&item("about", "About CreatePress", None)?);
+    let help = help.build()?;
 
     #[allow(unused_mut)]
     let mut menu = MenuBuilder::new(app);
     #[cfg(target_os = "macos")]
     {
-        let app_menu = SubmenuBuilder::new(app, "WordPress Remote Editor")
-            .about(Some(AboutMetadata::default()))
+        let app_menu = SubmenuBuilder::new(app, "CreatePress")
+            .item(&item("about", "About CreatePress", None)?)
             .separator()
             .services()
             .separator()
@@ -85,8 +89,6 @@ pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<Menu<R>> {
             .build()?;
         menu = menu.item(&app_menu);
     }
-    #[cfg(not(target_os = "macos"))]
-    let _ = AboutMetadata::default();
     menu.items(&[&file, &edit, &view, &window, &help]).build()
 }
 

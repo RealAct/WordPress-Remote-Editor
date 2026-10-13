@@ -11,7 +11,7 @@ use std::time::Duration;
 use url::Url;
 use zeroize::Zeroizing;
 
-pub const USER_AGENT: &str = concat!("WordPressRemoteEditor/", env!("CARGO_PKG_VERSION"));
+pub const USER_AGENT: &str = concat!("CreatePress/", env!("CARGO_PKG_VERSION"));
 const MAX_RESPONSE_BYTES: usize = 16 * 1024 * 1024;
 const MAX_REDIRECTS: usize = 5;
 

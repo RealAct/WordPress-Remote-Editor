@@ -68,14 +68,14 @@ pub enum EditorCommand {
 impl EditorCommand {
     fn script(self) -> &'static str {
         match self {
-            Self::Save => "window.__wpre && window.__wpre.save()",
-            Self::Publish => "window.__wpre && window.__wpre.publish()",
-            Self::Undo => "window.__wpre && window.__wpre.undo()",
-            Self::Redo => "window.__wpre && window.__wpre.redo()",
-            Self::ToggleSettings => "window.__wpre && window.__wpre.toggleSettings()",
-            Self::DeviceDesktop => "window.__wpre && window.__wpre.device('Desktop')",
-            Self::DeviceTablet => "window.__wpre && window.__wpre.device('Tablet')",
-            Self::DeviceMobile => "window.__wpre && window.__wpre.device('Mobile')",
+            Self::Save => "window.__createpress && window.__createpress.save()",
+            Self::Publish => "window.__createpress && window.__createpress.publish()",
+            Self::Undo => "window.__createpress && window.__createpress.undo()",
+            Self::Redo => "window.__createpress && window.__createpress.redo()",
+            Self::ToggleSettings => "window.__createpress && window.__createpress.toggleSettings()",
+            Self::DeviceDesktop => "window.__createpress && window.__createpress.device('Desktop')",
+            Self::DeviceTablet => "window.__createpress && window.__createpress.device('Tablet')",
+            Self::DeviceMobile => "window.__createpress && window.__createpress.device('Mobile')",
         }
     }
 }
@@ -186,7 +186,7 @@ async fn handoff_url(site: &SiteRecord, target: &Url) -> AppResult<Url> {
     let client = WpClient::new(site.api_root.clone(), &creds, site.allow_insecure_local)?;
     let h: Handoff = client
         .post(
-            "wpre/v1/handoff",
+            "createpress/v1/handoff",
             &serde_json::json!({ "redirect_to": target.as_str() }),
         )
         .await?;
@@ -240,7 +240,7 @@ pub async fn open(
         .map(|u| u.origin().ascii_serialization())
         .collect();
     let config = serde_json::json!({ "origins": origins }).to_string();
-    let script = BRIDGE_JS.replace("__WPRE_CONFIG__", &config);
+    let script = BRIDGE_JS.replace("__CREATEPRESS_CONFIG__", &config);
 
     // Grant the remote page exactly one command, only on this site's origins.
     let mut cap = CapabilityBuilder::new(format!("editor-remote-{site_id}"))
@@ -302,6 +302,17 @@ pub fn set_bounds(app: &AppHandle, bounds: Bounds) -> AppResult<()> {
         w.set_position(LogicalPosition::new(b.x, b.y))?;
         w.set_size(LogicalSize::new(b.width, b.height))?;
         platform_layout(app, Some(b))?;
+    }
+    Ok(())
+}
+
+pub fn set_hidden(app: &AppHandle, hidden: bool) -> AppResult<()> {
+    if let Some(w) = app.get_webview(EDITOR_LABEL) {
+        if hidden {
+            w.hide()?;
+        } else {
+            w.show()?;
+        }
     }
     Ok(())
 }

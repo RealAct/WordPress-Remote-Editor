@@ -3,7 +3,7 @@
 //! WordPress's own `authorize-application.php` screen is opened in an
 //! isolated, incognito window with no IPC access. The user signs in with
 //! their normal login (2FA/SSO keep working) and approves the app. WordPress
-//! then redirects to `wpremoteeditor://auth/callback?...`, which we intercept
+//! then redirects to `createpress://auth/callback?...`, which we intercept
 //! inside our own webview, so no other app can claim the scheme.
 
 use crate::error::{AppError, AppResult};
@@ -19,10 +19,10 @@ use url::Url;
 use uuid::Uuid;
 use zeroize::Zeroizing;
 
-pub const CALLBACK_SCHEME: &str = "wpremoteeditor";
+pub const CALLBACK_SCHEME: &str = "createpress";
 /// Stable app ID so WordPress groups all passwords created by this app.
 pub const APP_ID: &str = "8f4d7f3e-6b0e-4c1a-9a58-2f0b8f7f9b21";
-pub const APP_NAME: &str = "WordPress Remote Editor";
+pub const APP_NAME: &str = "CreatePress";
 const AUTH_WINDOW: &str = "auth";
 
 pub struct PendingAuth {
@@ -254,25 +254,15 @@ mod tests {
     #[test]
     fn builds_authorize_url_with_state() {
         let ep = Url::parse("https://example.com/wp-admin/authorize-application.php").unwrap();
-        let u = authorize_url(
-            &ep,
-            "abc",
-            "WordPress Remote Editor (laptop, 2026-10-13 09:00)",
-        );
+        let u = authorize_url(&ep, "abc", "CreatePress (laptop, 2026-10-13 09:00)");
         let pairs: std::collections::HashMap<_, _> = u.query_pairs().into_owned().collect();
-        assert_eq!(
-            pairs["app_name"],
-            "WordPress Remote Editor (laptop, 2026-10-13 09:00)"
-        );
+        assert_eq!(pairs["app_name"], "CreatePress (laptop, 2026-10-13 09:00)");
         assert_eq!(pairs["app_id"], APP_ID);
         assert_eq!(
             pairs["success_url"],
-            "wpremoteeditor://auth/callback?state=abc"
+            "createpress://auth/callback?state=abc"
         );
-        assert_eq!(
-            pairs["reject_url"],
-            "wpremoteeditor://auth/rejected?state=abc"
-        );
+        assert_eq!(pairs["reject_url"], "createpress://auth/rejected?state=abc");
     }
 
     #[test]
@@ -283,12 +273,9 @@ mod tests {
             .unwrap();
         assert_eq!(
             password_name("eli-mbp", t),
-            "WordPress Remote Editor (eli-mbp, 2026-10-13 09:05)"
+            "CreatePress (eli-mbp, 2026-10-13 09:05)"
         );
-        assert_eq!(
-            password_name("  ", t),
-            "WordPress Remote Editor (2026-10-13 09:05)"
-        );
+        assert_eq!(password_name("  ", t), "CreatePress (2026-10-13 09:05)");
         assert!(!password_name("bad\nname", t).contains('\n'));
     }
 

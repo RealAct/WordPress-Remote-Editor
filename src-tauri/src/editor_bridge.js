@@ -3,7 +3,7 @@
 // editor state and reports a small, fixed-shape object to the native shell.
 (function () {
   "use strict";
-  var CONFIG = __WPRE_CONFIG__;
+  var CONFIG = __CREATEPRESS_CONFIG__;
   if (window.top !== window) return;
   if (CONFIG.origins.indexOf(window.location.origin) === -1) return;
 
@@ -16,12 +16,12 @@
     ".interface-interface-skeleton{top:0!important;left:0!important}" +
     "body.is-fullscreen-mode .interface-interface-skeleton{top:0!important}";
   function injectStyle() {
-    if (document.getElementById("wpre-embedded-style")) return;
+    if (document.getElementById("createpress-embedded-style")) return;
     var style = document.createElement("style");
-    style.id = "wpre-embedded-style";
+    style.id = "createpress-embedded-style";
     style.textContent = css;
     (document.head || document.documentElement).appendChild(style);
-    document.documentElement.classList.add("wpre-embedded");
+    document.documentElement.classList.add("createpress-embedded");
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", injectStyle);
@@ -107,7 +107,7 @@
     return false;
   }
 
-  Object.defineProperty(window, "__wpre", {
+  Object.defineProperty(window, "__createpress", {
     configurable: false,
     writable: false,
     value: Object.freeze({
